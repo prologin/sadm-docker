@@ -1,0 +1,8 @@
+[submodule "concours/sadm"]
+	path = concours/sadm
+	url = https://github.com/prologin/sadm
+	branch = concours-2021
+[submodule "sadm"]
+	path = sadm
+	url = https://github.com/prologin/sadm
+	branch = concours-2021

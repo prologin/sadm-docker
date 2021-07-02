@@ -1,0 +1,68 @@
+version: "3.5"
+
+services:
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: concours
+      POSTGRES_PASSWORD: concours
+      POSTGRES_DB: concours
+    networks:
+      - concours_db
+    volumes:
+      - "pg_concours:/var/lib/postgresql/data"
+
+  reverse:
+    image: nginx:alpine
+    depends_on:
+      - concours
+    volumes:
+      - "concours_static:/usr/share/nginx/html"
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+    ports:
+      - "127.0.0.1:80:80"
+    networks:
+      - concours_web
+
+  concours:
+    build:
+      context: .
+      dockerfile: concours-base/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_USER: concours
+      DB_NAME: concours
+      DB_PASSWORD: concours
+      MASTER_URL: "http://nxdomain.cluster.prologin.dev:8067"
+      MASTER_SHARED_SECRET: "test"
+      CONCOURS_GAME: "prologin_test"
+      CONCOURS_NB_PLAYERS: "2"
+      CONCOURS_USE_MAPS: "true"
+      CONCOURS_MAP_VALIDATOR_SCRIPT: "/bin/true"
+      CONCOURS_FIGHT_ONLY_OWN_CHAMPIONS: "false"
+      CONCOURS_DEBUG: "false"
+      CONCOURS_SECRET_KEY: "CHANGEME"
+      CONCOURS_STATIC_PATH: "/concours/concours_static"
+      CONCOURS_ENABLE_REPLAY: "true"
+      CONCOURS_ENABLE_OIDC: "true"
+      CONCOURS_OIDC_CLIENT_ID: "945382"
+      CONCOURS_OIDC_CLIENT_SECRET: "32bd7f71c8abc5f6cfa186a00c4923c198486a452c91534cc142c2a4"
+      REDMINE_ISSUE_LIST_URL: "https://prologin.org/forum"
+      REDMINE_ISSUE_NEW_URL: "https://prologin.org/forum"
+    networks:
+      - concours_db
+      - concours_web
+    volumes:
+      - "concours_static:/concours/concours_static"
+      - "concours_shared:/concours/shared"
+    depends_on:
+      - db
+
+networks:
+  concours_db:
+  concours_web:
+
+volumes:
+  pg_concours:
+  concours_static:
+  concours_shared:

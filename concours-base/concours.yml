@@ -1,0 +1,40 @@
+db:
+  default:
+    ENGINE: django.db.backends.postgresql
+    HOST: "$DB_HOST"
+    PORT: "$DB_PORT"
+    USER: "$DB_USER"
+    NAME: "$DB_NAME"
+    PASSWORD: "$DB_PASSWORD"
+
+master:
+  url: "$MASTER_URL"
+  shared_secret: "$MASTER_SHARED_SECRET"
+
+contest:
+  game: "$CONCOURS_GAME"
+  nb_players: $CONCOURS_NB_PLAYERS
+
+  directory: /concours/shared
+  use_maps: $CONCOURS_USE_MAPS
+  map_validator_script: "$CONCOURS_MAP_VALIDATOR_SCRIPT"
+
+  fight_only_own_champions: $CONCOURS_FIGHT_ONLY_OWN_CHAMPIONS
+
+secret_key: "$CONCOURS_SECRET_KEY"
+
+debug: $CONCOURS_DEBUG
+static_root: "$CONCOURS_STATIC_ROOT"
+
+website:
+  static_path: "$CONCOURS_STATIC_PATH"
+  replay: $CONCOURS_ENABLE_REPLAY
+
+oidc:
+  enable: $CONCOURS_ENABLE_OIDC
+  client_id: "$CONCOURS_OIDC_CLIENT_ID"
+  client_secret: "$CONCOURS_OIDC_CLIENT_SECRET"
+
+redmine_urls:
+  issue_list: "$REDMINE_ISSUE_LIST_URL"
+  issue_new: "$REDMINE_ISSUE_NEW_URL"

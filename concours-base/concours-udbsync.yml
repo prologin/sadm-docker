@@ -1,0 +1,7 @@
+user_group: ""
+orga_group: "ORGANIZER"
+root_group: "root"
+
+allowed_groups: ["user", "orga", "root"]
+staff_groups: ["orga", "root"]
+superuser_groups: ["root"]
