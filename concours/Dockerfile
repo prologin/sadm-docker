@@ -4,7 +4,6 @@ FROM archlinux:base-devel
 
 ARG CONCOURS_UID=1000
 ARG CONCOURS_GID=1000
-ARG SADM_BRANCH="concours-2021"
 
 RUN pacman -Sy --noconfirm \
     python \
@@ -50,6 +49,9 @@ COPY concours/init.sh /init.sh
 WORKDIR /concours/sadm/concours
 
 USER root
+
+COPY concours/finale_game /concours/finale_game
+
 RUN chown -R concours:concours /concours
 
 CMD ["/init.sh"]

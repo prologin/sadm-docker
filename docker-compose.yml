@@ -27,7 +27,7 @@ services:
   concours:
     build:
       context: .
-      dockerfile: concours-base/Dockerfile
+      dockerfile: concours/Dockerfile
     environment:
       DB_HOST: db
       DB_USER: concours
@@ -38,11 +38,11 @@ services:
       CONCOURS_GAME: "prologin_test"
       CONCOURS_NB_PLAYERS: "2"
       CONCOURS_USE_MAPS: "true"
-      CONCOURS_MAP_VALIDATOR_SCRIPT: "/bin/true"
+      CONCOURS_MAP_VALIDATOR_SCRIPT: "/concours/finale_game/www/validator.py"
       CONCOURS_FIGHT_ONLY_OWN_CHAMPIONS: "false"
       CONCOURS_DEBUG: "false"
       CONCOURS_SECRET_KEY: "CHANGEME"
-      CONCOURS_STATIC_PATH: "/concours/concours_static"
+      CONCOURS_STATIC_PATH: "/concours/finale_game/www/static"
       CONCOURS_ENABLE_REPLAY: "true"
       CONCOURS_ENABLE_OIDC: "true"
       CONCOURS_OIDC_CLIENT_ID: "945382"
