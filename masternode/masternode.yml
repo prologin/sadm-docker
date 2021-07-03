@@ -1,0 +1,32 @@
+master:
+  port: ${MASTERNODE_PORT}
+
+  # A shared secret used to avoid malicious requests impersonating a worker
+  # node.
+  shared_secret: "${MASTERNODE_SHARED_SECRET}"
+
+worker:
+  # After this number of seconds has elapsed, if a worker node has not sent a
+  # ping it will be considered as dead. This value must be grater than the one
+  # configured as the ping interval in the worker nodes.
+  timeout_secs: ${WORKER_TIMEOUT_SECS}
+  compilation_timeout_secs: ${WORKER_COMPILATION_TIMEOUT_SECS}
+  match_timeout_secs: ${WORKER_MATCH_TIMEOUT_SECS}
+  max_task_tries: ${WORKER_MAX_TASK_TRIES}
+
+# SQL connection informations and queries. If you are using the standard
+# stechec website, do not change the queries!
+sql:
+  host: "${DB_HOST}"
+  port: ${DB_PORT}
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+  database: "${DB_NAME}"
+
+contest:
+  # most likely prologin<YEAR>
+  game: "${CONTEST_GAME}"
+
+  # Root directory where the website uploads champions, finds logs, etc.
+  # Should be shared with the master node.
+  directory: "${CONTEST_DIRECTORY}"

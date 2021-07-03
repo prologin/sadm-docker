@@ -52,15 +52,36 @@ services:
     networks:
       - concours_db
       - concours_web
+      - concours_masternode
     volumes:
       - "concours_static:/concours/concours_static"
       - "concours_shared:/concours/shared"
     depends_on:
       - db
 
+  masternode:
+    build:
+      context: .
+      dockerfile: masternode/Dockerfile
+    environment:
+      MASTERNODE_SHARED_SECRET: "test"
+      DB_HOST: db
+      DB_USER: concours
+      DB_NAME: concours
+      DB_PASSWORD: concours
+      CONTEST_GAME: prologin2020_plante
+    networks:
+      - concours_db
+    volumes:
+      - "concours_shared:/concours/shared"
+    depends_on:
+      - concours
+      
+
 networks:
   concours_db:
   concours_web:
+  concours_masternode:
 
 volumes:
   pg_concours:
