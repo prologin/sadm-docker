@@ -1,0 +1,30 @@
+master:
+    host: ${MASTERNODE_HOSTNAME}
+    port: 8067
+    heartbeat_secs: 5             # Must be < to the master timeout.
+    shared_secret: "${MASTERNODE_SHARED_SECRET}"
+
+# Configuration of this worker.
+worker:
+  # Port used for RPC communication.
+  port: 8068
+  # Number of parallel tasks that can be # executed on this worker.
+  available_slots: $WORKER_AVAILABLE_SLOTS
+
+# Paths of some needed tools
+path:
+    stechec_server: /usr/bin/stechec2-server
+    stechec_client: /usr/bin/stechec2-client
+    # Stechec's rules library
+    rules: '${RULES_PATH}'
+    # Directory containing the player environment
+    player_env: '${PLAYER_ENVIRONMENT_PATH}'
+
+timeout: # timeouts in seconds (double)
+    server: 400
+    client: 400
+
+isolate:
+    time_limit_secs: 350
+    mem_limit_MiB: 500
+    processes: 100

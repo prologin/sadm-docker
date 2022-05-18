@@ -16,15 +16,13 @@ RUN pacman -Sy --noconfirm \
     python-virtualenv && \
     rm -rf /var/cache/pacman/*
 
-RUN mkdir -p /concours && \
-    groupadd -g ${CONCOURS_GID} concours && \
-    useradd -u ${CONCOURS_UID} -g concours -d /concours -s /bin/bash concours && \
-    chown -R concours:concours /concours
+RUN mkdir -p /concours  /concours/sadm
+
+COPY sadm/requirements.txt sadm/setup.py /concours/sadm
 
 WORKDIR /concours
 
-COPY sadm /concours/sadm
-RUN chown -R concours:concours /concours/sadm
+# RUN chown -R concours:concours /concours/sadm
 
 ENV CFG_DIR=/concours/config
 
@@ -32,16 +30,16 @@ RUN mkdir config shared
 
 WORKDIR /concours/sadm
 
-RUN pip install -e . -r requirements.txt
+RUN pip install -r requirements.txt
 
 RUN pip install aiopg==1.1.0
+COPY sadm /concours/sadm
 
 COPY masternode/masternode.yml /concours/config
+RUN echo "enabled: true" > /concours/config/timeauth.yml
 
 COPY masternode/init.sh /init.sh
 
-RUN chown -R concours:concours /concours
-
-USER concours
+# RUN chown -R concours:concours /concours
 
 CMD ["/init.sh"]

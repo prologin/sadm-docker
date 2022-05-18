@@ -26,4 +26,4 @@ tmp_file=$(mktemp /tmp/masternodeXXXX)
 envsubst < "$CONFIG_PATH" > "$tmp_file"
 mv "$tmp_file" "$CONFIG_PATH"
 
-python -m prologin.masternode
+exec python -m prologin.masternode -l -v

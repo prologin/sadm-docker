@@ -16,42 +16,38 @@ RUN pacman -Sy --noconfirm \
     python-virtualenv && \
     rm -rf /var/cache/pacman/*
 
-RUN mkdir -p /concours && \
-    groupadd -g ${CONCOURS_GID} concours && \
-    useradd -u ${CONCOURS_UID} -g concours -d /concours -s /bin/bash concours && \
-    chown -R concours:concours /concours
-
-WORKDIR /concours
-
-COPY sadm /concours/sadm
-RUN chown -R concours:concours /concours/sadm
-
-USER concours
-
-ENV CFG_DIR=/concours/config
-
-RUN mkdir config shared concours_static
+RUN mkdir -p /concours/sadm
+COPY sadm/requirements.txt sadm/setup.py /concours/sadm
 
 WORKDIR /concours/sadm
 
 RUN python -m venv venv
 
-RUN venv/bin/pip install -e . -r requirements.txt
+RUN venv/bin/pip install -r requirements.txt
 
-RUN mkdir concours  && \
-    cp ansible/roles/concours/templates/django/manage.py concours/manage.py
+COPY sadm /concours/sadm
+RUN venv/bin/pip install .
+#RUN chown -R concours:concours /concours/sadm
+
+ENV CFG_DIR=/concours/config
+
+RUN mkdir /concours/config /concours/shared /concours/concours_static /concours/concours
+
+RUN cp /concours/sadm/ansible/roles/concours/templates/django/manage.py /concours/concours/manage.py
 
 COPY concours/concours.yml /concours/config/concours.yml
 COPY concours/concours-udbsync.yml /concours/config/concours-udbsync.yml
 
+RUN echo "enabled: true" > /concours/config/timeauth.yml
+
 COPY concours/init.sh /init.sh
 
-WORKDIR /concours/sadm/concours
+WORKDIR /concours/sadm
 
-USER root
+# USER root
 
 COPY concours/finale_game /concours/finale_game
 
-RUN chown -R concours:concours /concours
+# RUN chown -R concours:concours /concours
 
 CMD ["/init.sh"]

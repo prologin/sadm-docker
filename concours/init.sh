@@ -46,18 +46,25 @@ tmp_config=$(mktemp concoursXXXX)
 envsubst < "$CONCOURS_CONFIG_PATH" > "$tmp_config"
 mv "$tmp_config" "$CONCOURS_CONFIG_PATH"
 
-# hack to chown the volumes
-for path in $PATHS_TO_CHOWN; do
-    chown -R concours:concours "$path"
-done
+# # hack to chown the volumes
+# for path in $PATHS_TO_CHOWN; do
+#     chown -R concours:concours "$path"
+# done
 
 
-su -c '../venv/bin/python ./manage.py migrate --noinput' concours
-su -c '../venv/bin/python ./manage.py collectstatic --noinput' concours
+pwd
+pwd
+pwd
+pwd
+pwd
+ls -la
 
-su -p -c '../venv/bin/gunicorn \
+./venv/bin/python /concours/concours/manage.py migrate --noinput
+./venv/bin/python /concours/concours/manage.py collectstatic --noinput
+
+./venv/bin/gunicorn \
     -w "${GUNICORN_NB_WORKERS}" \
     -b "0.0.0.0:8000" \
     --error-logfile "-" \
     --access-logfile "-" \
-    prologin.concours.wsgi' concours
+    prologin.concours.wsgi
