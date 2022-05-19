@@ -2,7 +2,10 @@ master:
     host: ${MASTERNODE_HOSTNAME}
     port: 8067
     heartbeat_secs: 5             # Must be < to the master timeout.
+    max_retries: 15
+    retry_delay: 10
     shared_secret: "${MASTERNODE_SHARED_SECRET}"
+    repo_champions: "${REPO_CHAMPIONS_URL}"
 
 # Configuration of this worker.
 worker:

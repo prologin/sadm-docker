@@ -26,4 +26,8 @@ tmp_file=$(mktemp /tmp/masternodeXXXX)
 envsubst < "$CONFIG_PATH" > "$tmp_file"
 mv "$tmp_file" "$CONFIG_PATH"
 
-exec python -m prologin.masternode -l -v
+if [ "$MASTERNODE_DEBUG" -eq 1 ]; then
+  exec python -m prologin.masternode -v
+else
+  exec python -m prologin.masternode 
+fi

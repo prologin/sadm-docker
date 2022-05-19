@@ -46,19 +46,6 @@ tmp_config=$(mktemp concoursXXXX)
 envsubst < "$CONCOURS_CONFIG_PATH" > "$tmp_config"
 mv "$tmp_config" "$CONCOURS_CONFIG_PATH"
 
-# # hack to chown the volumes
-# for path in $PATHS_TO_CHOWN; do
-#     chown -R concours:concours "$path"
-# done
-
-
-pwd
-pwd
-pwd
-pwd
-pwd
-ls -la
-
 ./venv/bin/python /concours/concours/manage.py migrate --noinput
 ./venv/bin/python /concours/concours/manage.py collectstatic --noinput
 

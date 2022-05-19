@@ -14,10 +14,12 @@ services:
 
   reverse:
     image: nginx:alpine
+    hostname: reverse
     depends_on:
       - concours
     volumes:
       - "concours_static:/usr/share/nginx/html"
+      - "concours_shared:/concours_shared"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
     ports:
       - "127.0.0.1:80:80"
@@ -33,20 +35,20 @@ services:
       DB_USER: concours
       DB_NAME: concours
       DB_PASSWORD: concours
-      MASTER_URL: "http://nxdomain.cluster.prologin.dev:8067"
+      MASTER_URL: "http://masternode:8067"
       MASTER_SHARED_SECRET: "test"
-      CONCOURS_GAME: "prologin_test"
+      CONCOURS_GAME: "prologin2022"
       CONCOURS_NB_PLAYERS: "2"
       CONCOURS_USE_MAPS: "true"
-      CONCOURS_MAP_VALIDATOR_SCRIPT: "/concours/finale_game/www/validator.py"
+      CONCOURS_MAP_VALIDATOR_SCRIPT: "/usr/bin/true"
       CONCOURS_FIGHT_ONLY_OWN_CHAMPIONS: "false"
-      CONCOURS_DEBUG: "false"
+      CONCOURS_DEBUG: "true"
       CONCOURS_SECRET_KEY: "CHANGEME"
       CONCOURS_STATIC_PATH: "/concours/finale_game/www/static"
       CONCOURS_ENABLE_REPLAY: "true"
       CONCOURS_ENABLE_OIDC: "true"
-      CONCOURS_OIDC_CLIENT_ID: "945382"
-      CONCOURS_OIDC_CLIENT_SECRET: "32bd7f71c8abc5f6cfa186a00c4923c198486a452c91534cc142c2a4"
+      CONCOURS_OIDC_CLIENT_ID: "concours"
+      CONCOURS_OIDC_CLIENT_SECRET: "CHANGE_ME"
       REDMINE_ISSUE_LIST_URL: "https://prologin.org/forum"
       REDMINE_ISSUE_NEW_URL: "https://prologin.org/forum"
     networks:
@@ -56,10 +58,12 @@ services:
     volumes:
       - "concours_static:/concours/concours_static"
       - "concours_shared:/concours/shared"
+      - "./concours/finale_game:/concours/finale_game"
     depends_on:
       - db
 
   masternode:
+    hostname: masternode
     build:
       context: .
       dockerfile: masternode/Dockerfile
@@ -69,13 +73,36 @@ services:
       DB_USER: concours
       DB_NAME: concours
       DB_PASSWORD: concours
-      CONTEST_GAME: prologin2020_plante
+      CONTEST_GAME: prologin2022
+      MASTERNODE_DEBUG: "0"
     networks:
       - concours_db
+      - concours_masternode
     volumes:
       - "concours_shared:/concours/shared"
     depends_on:
       - concours
+
+
+  workernode:
+    privileged: true
+    hostname: workernode
+    build:
+      context: .
+      dockerfile: workernode/Dockerfile
+    environment:
+      MASTERNODE_HOSTNAME: "masternode"
+      MASTERNODE_SHARED_SECRET: "test"
+      WORKER_AVAILABLE_SLOTS: "20"
+      RULES_PATH: /game/lib/libprologin2022.so
+      PLAYER_ENVIRONMENT_PATH: /game/share/stechec2/prologin2022/player
+      REPO_CHAMPIONS_URL: "http://reverse/repo-champions"
+      WORKERNODE_DEBUG: "0"
+    networks:
+      - concours_masternode
+      - concours_web
+    volumes:
+      - "./concours/finale_game/result:/game:ro"
       
 
 networks:

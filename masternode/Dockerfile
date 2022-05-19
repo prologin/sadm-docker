@@ -36,9 +36,11 @@ RUN pip install aiopg==1.1.0
 COPY sadm /concours/sadm
 
 COPY masternode/masternode.yml /concours/config
-RUN echo "enabled: true" > /concours/config/timeauth.yml
+RUN echo "enabled: false" > /concours/config/timeauth.yml
 
 COPY masternode/init.sh /init.sh
+
+ENV PYTHONUNBUFFERED=1
 
 # RUN chown -R concours:concours /concours
 
